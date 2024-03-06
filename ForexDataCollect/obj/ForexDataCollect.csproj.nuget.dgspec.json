@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\bartw\\Documents\\cAlgo\\Sources\\Robots\\ForexDataCollect\\ForexDataCollect\\ForexDataCollect.csproj": {}
+    "C:\\Users\\bartw\\Documents\\cAlgo\\Sources\\Robots\\ForexDataCollect\\ForexDataCollect\\ForexDataCollect.csproj": {}
   },
   "projects": {
-    "c:\\Users\\bartw\\Documents\\cAlgo\\Sources\\Robots\\ForexDataCollect\\ForexDataCollect\\ForexDataCollect.csproj": {
+    "C:\\Users\\bartw\\Documents\\cAlgo\\Sources\\Robots\\ForexDataCollect\\ForexDataCollect\\ForexDataCollect.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\bartw\\Documents\\cAlgo\\Sources\\Robots\\ForexDataCollect\\ForexDataCollect\\ForexDataCollect.csproj",
+        "projectUniqueName": "C:\\Users\\bartw\\Documents\\cAlgo\\Sources\\Robots\\ForexDataCollect\\ForexDataCollect\\ForexDataCollect.csproj",
         "projectName": "ForexDataCollect",
-        "projectPath": "c:\\Users\\bartw\\Documents\\cAlgo\\Sources\\Robots\\ForexDataCollect\\ForexDataCollect\\ForexDataCollect.csproj",
+        "projectPath": "C:\\Users\\bartw\\Documents\\cAlgo\\Sources\\Robots\\ForexDataCollect\\ForexDataCollect\\ForexDataCollect.csproj",
         "packagesPath": "C:\\Users\\bartw\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\bartw\\Documents\\cAlgo\\Sources\\Robots\\ForexDataCollect\\ForexDataCollect\\obj\\",
+        "outputPath": "C:\\Users\\bartw\\Documents\\cAlgo\\Sources\\Robots\\ForexDataCollect\\ForexDataCollect\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

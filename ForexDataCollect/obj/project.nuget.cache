@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "E9NU5AZsKvIC73Nt30Wxp+l2Za0fTcU7NgLSuFbEWnDmo58Kt26CipCZIG9xTIoLjjXN9rqXZwz6RKBc87lG4A==",
+  "dgSpecHash": "otMXUmvpARyphRcbqY0kL5410OJSNchVcQL76MtLvtLEtOvVe9W4/0UzYeWAcEpcm1SmZ4ZQpyqpIJ9cH3c7HA==",
   "success": true,
-  "projectFilePath": "c:\\Users\\bartw\\Documents\\cAlgo\\Sources\\Robots\\ForexDataCollect\\ForexDataCollect\\ForexDataCollect.csproj",
+  "projectFilePath": "C:\\Users\\bartw\\Documents\\cAlgo\\Sources\\Robots\\ForexDataCollect\\ForexDataCollect\\ForexDataCollect.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\bartw\\.nuget\\packages\\ctrader.automate\\1.0.8\\ctrader.automate.1.0.8.nupkg.sha512",
     "C:\\Users\\bartw\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.26\\microsoft.netcore.app.ref.6.0.26.nupkg.sha512",
