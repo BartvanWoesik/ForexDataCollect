@@ -90,7 +90,7 @@ namespace cAlgo.Robots
             dataValues.Add(serverTime.ToString("dd.MM.yyyy HH:mm:ss"));
 
 
-            for (int i = 1; i < 150; i++) 
+            for (int i = 1; i < Depth; i++) 
             {
                 _indicators.AddIndicatorData(dataValues, culture, i);
                 _barPrice.AddBarData(dataValues, culture, i);
