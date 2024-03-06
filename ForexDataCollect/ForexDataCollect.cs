@@ -11,6 +11,8 @@ using System.Threading;
 
 
 
+
+
 namespace cAlgo.Robots
 {
     [Robot(TimeZone = TimeZones.WEuropeStandardTime, AccessRights = AccessRights.FullAccess)]
@@ -19,9 +21,6 @@ namespace cAlgo.Robots
 
     public class Datacollect : Robot
     {
-
-        [Parameter(DefaultValue = 0.0)]
-        public double Parameter { get; set; }
 
         [Parameter("Source")]
         public DataSeries Source { get; set; }
@@ -37,13 +36,8 @@ namespace cAlgo.Robots
         private System.IO.FileStream fstream;
         private System.IO.StreamWriter fwriter;
  
-
-        private CommodityChannelIndex _CCI;
-        private LinearRegressionRSquared _linearRegressionRS { get; set; }
-        private RelativeStrengthIndex _rsi;
-        private SimpleMovingAverage _sma { get; set; }
-        private WilliamsPctR _WilliamsP;
-        private TickVolume _TV;
+        private Indicators _indicators;
+        
 
         private string csvHeader;
 
@@ -77,7 +71,7 @@ namespace cAlgo.Robots
                 AddBarData(dataValues, culture, i);
 
                 // Add RSI, MFI, TV, SMA, Williams, LinearRegression, CCI
-                AddIndicatorData(dataValues, culture, i);
+                _indicators.AddIndicatorData(dataValues, culture, i);
 
                 // Add headers for each bar data
                 csvHeader += GetHeader(i);
@@ -92,6 +86,14 @@ namespace cAlgo.Robots
 
         }
 
+        private void AddBarData(List<string> dataValues, CultureInfo culture, int index)
+        {
+            dataValues.Add(Bars.ClosePrices.Last(index).ToString("F6", culture));
+            dataValues.Add(Bars.OpenPrices.Last(index).ToString("F6", culture));
+            dataValues.Add(Bars.HighPrices.Last(index).ToString("F6", culture));
+            dataValues.Add(Bars.LowPrices.Last(index).ToString("F6", culture));
+        }
+
         protected override void OnStart()
         {
 
@@ -100,14 +102,7 @@ namespace cAlgo.Robots
             // Alles naar US notatie!!!
             CultureInfo nonInvariantCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = nonInvariantCulture;
-
-            // Aanroep indicatoren
-            _CCI = Indicators.CommodityChannelIndex(30);
-            _linearRegressionRS = Indicators.LinearRegressionRSquared(Source, Periods);
-            _rsi = Indicators.RelativeStrengthIndex(Source, Periods);
-            _sma = Indicators.SimpleMovingAverage(Source, Periods);
-            _WilliamsP = Indicators.WilliamsPctR(Periods);
-            _TV = Indicators.TickVolume();
+            _indicators = new Indicators(this, Source, Periods);
 
             Create_files();
 
@@ -146,29 +141,6 @@ namespace cAlgo.Robots
 
         }
 
-    
-
-        
-
-        // Helper method to add bar data to the dataValues list
-        private void AddBarData(List<string> dataValues, CultureInfo culture, int index)
-        {
-            dataValues.Add(Bars.ClosePrices.Last(index).ToString("F6", culture));
-            dataValues.Add(Bars.OpenPrices.Last(index).ToString("F6", culture));
-            dataValues.Add(Bars.HighPrices.Last(index).ToString("F6", culture));
-            dataValues.Add(Bars.LowPrices.Last(index).ToString("F6", culture));
-        }
-
-        // Helper method to add indicator data to the dataValues list
-        private void AddIndicatorData(List<string> dataValues, CultureInfo culture, int index)
-        {
-            dataValues.Add(_rsi.Result.Last(index).ToString("F1", culture));
-            dataValues.Add(_TV.Result.Last(index).ToString("F6", culture));
-            dataValues.Add(_sma.Result.Last(index).ToString("F6", culture));
-            dataValues.Add(_WilliamsP.Result.Last(index).ToString("F6", culture));
-            dataValues.Add(_linearRegressionRS.Result.Last(index).ToString("F6", culture));
-            dataValues.Add(_CCI.Result.Last(index).ToString("F6", culture));
-        }
 
         // Helper method to get the header for each bar data
         private string GetHeader(int index)
