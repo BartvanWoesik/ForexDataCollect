@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ForexDataCollect")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+72ec6047e3d2ad232ae6c4e84952343dc0e6ddf5")]
 [assembly: System.Reflection.AssemblyProductAttribute("ForexDataCollect")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ForexDataCollect")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
