@@ -8,7 +8,7 @@ using cAlgo.Indicators;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
-
+using System.Text;
 
 
 
@@ -28,6 +28,9 @@ namespace cAlgo.Robots
         [Parameter("Periods", DefaultValue = 14)]
         public int Periods { get; set; }
 
+        [Parameter("Depth", DefaultValue = 100)]
+        public int Depth { get; set; }
+
 
 
 
@@ -37,63 +40,14 @@ namespace cAlgo.Robots
         private System.IO.StreamWriter fwriter;
  
         private Indicators _indicators;
-        
-
-        private string csvHeader;
-
-
-
-
-        private readonly List<string> features_list = new List<string>();
-
-
+        private BarPrice _barPrice;
+ 
+        private readonly CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
 
         protected void DataCollect()
         {
-
-
-            // Set culture for consistent formatting
-            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
-
-
-            List<string> dataValues = new List<string>();
-            DateTime serverTime = Server.Time;
-
-            dataValues.Add(serverTime.ToString("dd.MM.yyyy HH:mm:ss"));
-
-            // Add headers
-            csvHeader = "Datum,";
-
-
-            for (int i = 1; i < 150; i++) 
-            {
-                // Add close, open, high, low prices
-                AddBarData(dataValues, culture, i);
-
-                // Add RSI, MFI, TV, SMA, Williams, LinearRegression, CCI
-                _indicators.AddIndicatorData(dataValues, culture, i);
-
-                // Add headers for each bar data
-                csvHeader += GetHeader(i);
-            }
-
-            csvHeader = csvHeader.TrimEnd(',');
-
-            // Combine dataValues into a single string separated by commas
-            string outputString = string.Join(",", dataValues);
-            // Add the data to the features list
-            features_list.Add(outputString);
-
+            OnStart();
         }
-
-        private void AddBarData(List<string> dataValues, CultureInfo culture, int index)
-        {
-            dataValues.Add(Bars.ClosePrices.Last(index).ToString("F6", culture));
-            dataValues.Add(Bars.OpenPrices.Last(index).ToString("F6", culture));
-            dataValues.Add(Bars.HighPrices.Last(index).ToString("F6", culture));
-            dataValues.Add(Bars.LowPrices.Last(index).ToString("F6", culture));
-        }
-
         protected override void OnStart()
         {
 
@@ -103,6 +57,7 @@ namespace cAlgo.Robots
             CultureInfo nonInvariantCulture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = nonInvariantCulture;
             _indicators = new Indicators(this, Source, Periods);
+            _barPrice = new BarPrice(this);
 
             Create_files();
 
@@ -110,9 +65,7 @@ namespace cAlgo.Robots
 
         protected override void OnBar()
         {
-            // Put your core logic here
-            DataCollect();
-            string feature_line = Get_data_line();
+            string feature_line = Create_Data_Line();
             if (feature_line != null)
             {
                 string joined = feature_line;
@@ -122,38 +75,65 @@ namespace cAlgo.Robots
             
 
         }
-
         protected override void OnStop()
         {
             fwriter.Close();
             fstream.Close();
         }
 
-        public string Get_data_line()
-        /* 
-         * Get the last line of the features list
-         * 
-         */
+        private string Create_Data_Line()
         {
-            
-            string feature_line = features_list[^1];
-            return feature_line;
+
+
+            List<string> dataValues = new List<string>();
+            DateTime serverTime = Server.Time;
+            dataValues.Add(serverTime.ToString("dd.MM.yyyy HH:mm:ss"));
+
+
+            for (int i = 1; i < 150; i++) 
+            {
+                _indicators.AddIndicatorData(dataValues, culture, i);
+                _barPrice.AddBarData(dataValues, culture, i);
+      
+            }
+
+          
+
+            // Combine dataValues into a single string separated by commas
+            string outputString = string.Join(",", dataValues);
+            // Add the data to the features list
+         
+            return outputString;
 
         }
 
+        
+
+        private string Create_Header()
+        {
+            StringBuilder csvHeader = new StringBuilder("Datum,");
+            for (int i = 1; i < Depth; i++)
+            {
+                csvHeader.Append(GetHeader(i));
+            }
+            csvHeader.AppendLine();
+            return csvHeader.ToString();
+        }
 
         // Helper method to get the header for each bar data
         private string GetHeader(int index)
         {
-            return string.Format("close_price{0},open_price{0},high_price{0},low_price{0},rsi{0},mfi{0},tv{0},sma{0},williams{0},regrs{0},cci{0},", index);
+            return string.Format("close_price{0},open_price{0},high_price{0},low_price{0},rsi{0},tv{0},sma{0},williams{0},regrs{0},cci{0},", index);
         }
+
+
+
+
+
 
         protected void Create_files()
         {
 
-            DataCollect();
-         
-            csvHeader += "\n";
             string fiName = DataDir + "\\Unprocessed_Data.csv";
             // Create directory if it does not exist
             if (System.IO.Directory.Exists(DataDir))
@@ -161,7 +141,7 @@ namespace cAlgo.Robots
                 System.IO.Directory.CreateDirectory(DataDir);
             }
 
-            System.IO.File.WriteAllText(fiName, csvHeader);
+            System.IO.File.WriteAllText(fiName, Create_Header());
             fstream = File.Open(fiName, FileMode.Open, FileAccess.Write, FileShare.ReadWrite);
             fstream.Seek(0, SeekOrigin.End);
             fwriter = new System.IO.StreamWriter(fstream, System.Text.Encoding.UTF8, 1)
